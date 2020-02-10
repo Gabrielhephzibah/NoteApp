@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_marginBottom="40dp"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="70dp"
+        android:background="@drawable/input_background">
+        <EditText
+            android:layout_marginLeft="15dp"
+            android:text="@string/heading"
+            android:textColor="#000"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="#fff"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#12225B" />
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@drawable/input_background">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/content"
+            android:layout_marginLeft="12dp"
+            android:lineSpacingMultiplier="1.5"
+            android:layout_marginRight="12dp"
+            android:inputType="text|textMultiLine"
+            android:backgroundTint="#fff"/>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/save"
+            android:layout_marginLeft="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="39dp"
+            android:layout_centerInParent="true"
+            android:text="Save"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:background="#12225B"
+            android:layout_marginTop="12dp"/>
+
+    </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>
+
+</LinearLayout>
