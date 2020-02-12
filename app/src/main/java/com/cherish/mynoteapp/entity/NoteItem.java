@@ -10,12 +10,13 @@ import androidx.room.PrimaryKey;
 public class NoteItem {
 
     @PrimaryKey
+
     @NonNull
     @ColumnInfo(name = "heading")
     private  String heading;
 
 
-    @PrimaryKey
+
     @NonNull
     @ColumnInfo(name = "content")
     private  String content;

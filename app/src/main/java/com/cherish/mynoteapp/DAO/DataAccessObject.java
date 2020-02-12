@@ -1,5 +1,6 @@
 package com.cherish.mynoteapp.DAO;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -19,8 +20,8 @@ public interface DataAccessObject {
     @Query("DELETE FROM note_table")
     void  delete();
 
-    @Query("SELECT * from note_table ORDER BY content  ASC")
-    List<NoteItem> getItemAlphabetically();
+    @Query("SELECT * from note_table ORDER BY heading  ASC")
+    LiveData<List<NoteItem>> getItemAlphabetically();
 
 
 
