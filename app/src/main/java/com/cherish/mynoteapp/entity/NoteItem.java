@@ -10,21 +10,27 @@ import androidx.room.PrimaryKey;
 public class NoteItem {
 
     @PrimaryKey
-
     @NonNull
-    @ColumnInfo(name = "heading")
     private  String heading;
 
 
-
-    @NonNull
-    @ColumnInfo(name = "content")
     private  String content;
 
     public NoteItem(String heading, String content) {
         this.heading = heading;
         this.content = content;
     }
+
+
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
 
     public String getHeading() {
         return heading;
@@ -34,11 +40,14 @@ public class NoteItem {
         this.heading = heading;
     }
 
-    public String getContent() {
-        return content;
-    }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+
+
+
+
+
+
+
+
+
 }

@@ -24,5 +24,13 @@ public interface DataAccessObject {
     LiveData<List<NoteItem>> getItemAlphabetically();
 
 
+//    @Query("SELECT * FROM note_table")
+//    LiveData<List<NoteItem>>getallNoteItem();
+//
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    void insert(List<NoteItem>noteItems);
+
+
+
 
 }

@@ -17,8 +17,8 @@ public class NoteAppRepository {
     private LiveData<List<NoteItem>> noteItem;
 
    public NoteAppRepository(Application application){
-        NoteAppDataBase dataBase = NoteAppDataBase.getDatebase(application);
-        accessObject = dataBase.dataAccessObject();
+        NoteAppDataBase dataBase = NoteAppDataBase.getDatabase(application);
+        accessObject = dataBase.getdatebase();
         noteItem = accessObject.getItemAlphabetically();
     }
    public LiveData<List<NoteItem>> getAllNoteItem(){
