@@ -20,13 +20,8 @@ import java.util.List;
 
 public class NewNoteActivity extends AppCompatActivity {
 
-
-
     EditText heading,content ;
     Button button;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +48,18 @@ public class NewNoteActivity extends AppCompatActivity {
         final String editContent =  content .getText().toString().trim();
         final String editHeading =  heading.getText().toString().trim();
 
-        if (editContent.isEmpty()){
-            content.setError("Content is Empty");
+
+        if (editHeading.isEmpty()){
+            heading.setError("heading is required");
+            heading.requestFocus();
+            return;
+        }else if (editContent.isEmpty()){
+            content.setError("Content is required");
             content.requestFocus();
             return;
         }
 
-        if (editHeading.isEmpty()){
-            heading.setError("heading is empty");
-            content.requestFocus();
-            return;
-        }
+
 
         class SaveNote extends AsyncTask<Void, Void, Void> {
 

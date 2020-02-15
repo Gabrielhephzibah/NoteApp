@@ -2,6 +2,7 @@ package com.cherish.mynoteapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +35,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoteAdapter.NoteViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final NoteAdapter.NoteViewHolder holder, int position) {
             Note notes = note.get(position);
             holder.content.setText(notes.getContent());
             holder.heading.setText(notes.getHeading());
-
     }
 
     @Override
@@ -64,6 +64,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             Intent intent = new Intent(context, NoteContent.class);
             intent.putExtra("note", noteItem);
             context.startActivity(intent);
+
 
         }
     }

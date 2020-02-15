@@ -14,20 +14,15 @@ import com.cherish.mynoteapp.DAO.DataBaseClient;
 import com.cherish.mynoteapp.entity.Note;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity   {
 
     FloatingActionButton fab;
 
 
      RecyclerView recyclerView;
-
-    public void showDetails(View view){
-        Intent intent = new Intent(getApplicationContext(), NoteContent.class);
-        startActivity(intent);
-
-    }
 
 
     @Override
@@ -45,14 +40,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-getNote();
+        getNote();
+
+
+
     }
+
     private void getNote(){
         class GetNote extends AsyncTask <Void, Void, List< Note >>{
 
             @Override
             protected List<Note> doInBackground(Void... voids) {
-                List<Note>notes = DataBaseClient
+                   List<Note> notes = DataBaseClient
                         .getInstance(getApplicationContext())
                         .getNoteDataBase()
                         .dataObjectAccess()
@@ -74,8 +73,6 @@ getNote();
         getNote.execute();
 
     }
-
-
 
 
 
