@@ -35,12 +35,15 @@
                 android:layout_height="wrap_content"
                 android:textColor="#000"
                 android:paddingLeft="60dp"
+                android:maxLines="2"
+                android:maxLength="200"
+                android:ellipsize="end"
                 android:layout_marginTop="10dp"
                 android:textSize="12dp"
                 android:fontFamily="@font/roboto"
                 android:textStyle="normal"
                 android:lineSpacingMultiplier="1.3"
-                android:text="Here's a twist on the traditional product review post. Instead of just reviewing a product, we're going to do a product......................."/>
+                android:text="Here's a twist on the traditional product review post. Instead of just reviewing a product, we're going to do a product"/>
         </RelativeLayout>
 
     </LinearLayout>

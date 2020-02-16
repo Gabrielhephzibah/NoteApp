@@ -25,6 +25,7 @@ public class NoteContent extends AppCompatActivity {
     TextView fullContent;
     Note note;
     Button delete;
+    AlertDialog alert;
 
 
     @Override
@@ -48,6 +49,8 @@ public class NoteContent extends AppCompatActivity {
                 View dialogView = inflater.inflate(R.layout.content_dialog, null);
                 dialog.setView(dialogView);
                 dialog.setCancelable(false);
+
+
                 editHeading= dialogView.findViewById(R.id.editHeading);
                 editContent = dialogView.findViewById(R.id.editContent);
                 editHeading.setText(note.getHeading());
@@ -57,11 +60,19 @@ public class NoteContent extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         editNote(note);
-//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                        startActivity(intent);
+
                     }
                 });
-                AlertDialog alert = dialog.create();
+
+                Button back = dialogView.findViewById(R.id.back);
+                back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alert.dismiss();
+
+                    }
+                });
+                alert = dialog.create();
                 alert.show();
             }
         });
