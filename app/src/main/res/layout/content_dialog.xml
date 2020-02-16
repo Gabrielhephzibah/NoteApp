@@ -9,6 +9,7 @@
         android:layout_height="70dp"
         android:background="@drawable/input_background">
         <EditText
+            android:id="@+id/editHeading"
             android:layout_marginLeft="15dp"
             android:text="@string/heading"
             android:textColor="#000"
@@ -35,6 +36,7 @@
         android:layout_height="250dp"
         android:background="@drawable/input_background">
         <EditText
+            android:id="@+id/editContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/content"

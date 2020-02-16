@@ -11,16 +11,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cherish.mynoteapp.DAO.DataBaseClient;
 import com.cherish.mynoteapp.entity.Note;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class NoteContent extends AppCompatActivity {
     Button edit;
-
+    EditText editHeading, editContent;
     TextView headingContent;
     TextView fullContent;
     Note note;
@@ -48,12 +48,17 @@ public class NoteContent extends AppCompatActivity {
                 View dialogView = inflater.inflate(R.layout.content_dialog, null);
                 dialog.setView(dialogView);
                 dialog.setCancelable(false);
+                editHeading= dialogView.findViewById(R.id.editHeading);
+                editContent = dialogView.findViewById(R.id.editContent);
+                editHeading.setText(note.getHeading());
+                editContent.setText(note.getContent());
                 Button save = dialogView.findViewById(R.id.save);
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                        editNote(note);
+//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                        startActivity(intent);
                     }
                 });
                 AlertDialog alert = dialog.create();
@@ -95,7 +100,7 @@ public class NoteContent extends AppCompatActivity {
     }
 
     private  void deleteNote(final Note notes){
-        class deleteTask extends AsyncTask<Void, Void, Void>{
+        class deleteMyNote extends AsyncTask<Void, Void, Void>{
 
             @Override
             protected Void doInBackground(Void... voids) {
@@ -109,13 +114,46 @@ public class NoteContent extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Toast.makeText(getApplicationContext(),"Deleted",Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(),"Deleted",Toast.LENGTH_LONG).show();
                 finish();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         }
 
-        deleteTask deleteTask = new deleteTask();
+        deleteMyNote deleteTask = new deleteMyNote();
         deleteTask.execute();
+    }
+
+    private void editNote(final Note notess){
+        final String editTitle = editHeading.getText().toString().trim();
+        final String editBody = editContent.getText().toString().trim();
+
+
+        class EditMyNote extends AsyncTask<Void,Void, Void>{
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                notess.setHeading(editTitle);
+                notess.setContent(editBody);
+                DataBaseClient.getInstance(getApplicationContext())
+                        .getNoteDataBase()
+                        .dataObjectAccess()
+                        .updateNote(notess);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Toast.makeText(getApplicationContext(),"Note Updated", Toast.LENGTH_LONG).show();
+                finish();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        }
+
+        EditMyNote editMyNote = new EditMyNote();
+        editMyNote.execute();
+
     }
 }
