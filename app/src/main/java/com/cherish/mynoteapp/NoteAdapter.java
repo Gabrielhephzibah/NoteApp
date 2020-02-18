@@ -1,5 +1,6 @@
 package com.cherish.mynoteapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -13,13 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Update;
 
 import com.cherish.mynoteapp.entity.Note;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
-    private Context context;
+    public Context context;
     private List<Note> note;
+
 
     public NoteAdapter(Context context, List<Note>note){
         this.context = context;
@@ -67,6 +71,22 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
 
         }
+    }
+
+    public  void  deleteMyNote(int position){
+        note.remove(position);
+        notifyItemRemoved(position);
+    }
+
+
+
+    public void undoDelete(Note notes,  int position){
+        note.add(position, notes);
+        notifyItemInserted(position);
+    }
+
+    public List<Note> getData() {
+        return note;
     }
 
 

@@ -49,8 +49,6 @@ public class NoteContent extends AppCompatActivity {
                 View dialogView = inflater.inflate(R.layout.content_dialog, null);
                 dialog.setView(dialogView);
                 dialog.setCancelable(false);
-
-
                 editHeading= dialogView.findViewById(R.id.editHeading);
                 editContent = dialogView.findViewById(R.id.editContent);
                 editHeading.setText(note.getHeading());
@@ -77,31 +75,6 @@ public class NoteContent extends AppCompatActivity {
             }
         });
 
-        delete = findViewById(R.id.delete);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(NoteContent.this);
-                dialog.setTitle("Delete Note");
-                dialog.setMessage("Are you sure you want to delete ");
-                dialog.setCancelable(false);
-                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteNote(note);
-                    }
-                });
-
-                dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
-            }
-        });
 
     }
 
@@ -110,30 +83,6 @@ public class NoteContent extends AppCompatActivity {
         fullContent.setText(note.getContent());
     }
 
-    private  void deleteNote(final Note notes){
-        class deleteMyNote extends AsyncTask<Void, Void, Void>{
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                DataBaseClient.getInstance(getApplicationContext())
-                        .getNoteDataBase()
-                        .dataObjectAccess()
-                        .deleteNote(notes);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Toast.makeText(getApplicationContext(),"Deleted",Toast.LENGTH_LONG).show();
-                finish();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            }
-        }
-
-        deleteMyNote deleteTask = new deleteMyNote();
-        deleteTask.execute();
-    }
 
     private void editNote(final Note notess){
         final String editTitle = editHeading.getText().toString().trim();

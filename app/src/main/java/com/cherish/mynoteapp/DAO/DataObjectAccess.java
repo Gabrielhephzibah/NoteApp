@@ -15,7 +15,7 @@ import java.util.List;
 
 @Dao
 public interface DataObjectAccess {
-    @Query("SELECT * FROM  Note ")
+    @Query("SELECT * FROM  Note ORDER BY id DESC ")
     List<Note>getAllNote();
 
     @Insert
@@ -27,8 +27,6 @@ public interface DataObjectAccess {
     @Delete
     void deleteNote(Note note);
 
-    @Delete
-    void deletebyID(Note...note);
 
 
 }

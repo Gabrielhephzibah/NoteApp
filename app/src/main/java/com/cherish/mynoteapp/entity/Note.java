@@ -20,12 +20,6 @@ public class Note implements Serializable {
     private String heading;
 
 
-//    public Note(int id, String content, String heading) {
-//        this.id = id;
-//        this.content = content;
-//        this.heading = heading;
-//    }
-
     public int getId() {
         return id;
     }
