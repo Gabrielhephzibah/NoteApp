@@ -18,6 +18,11 @@ import android.widget.Toast;
 import com.cherish.mynoteapp.DAO.DataBaseClient;
 import com.cherish.mynoteapp.entity.Note;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
+
 public class NoteContent extends AppCompatActivity {
     Button edit;
     EditText editHeading, editContent;
@@ -26,6 +31,9 @@ public class NoteContent extends AppCompatActivity {
     Note note;
     Button delete;
     AlertDialog alert;
+    String editTitle;
+    String editBody;
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
 
     @Override
@@ -57,6 +65,13 @@ public class NoteContent extends AppCompatActivity {
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                         editTitle = editHeading.getText().toString().trim();
+                         editBody = editContent.getText().toString().trim();
+
+                       note.setHeading(editTitle);
+                       note.setContent(editBody);
+
+
                         editNote(note);
 
                     }
@@ -85,35 +100,35 @@ public class NoteContent extends AppCompatActivity {
 
 
     private void editNote(final Note notess){
-        final String editTitle = editHeading.getText().toString().trim();
-        final String editBody = editContent.getText().toString().trim();
 
-
-        class EditMyNote extends AsyncTask<Void,Void, Void>{
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                notess.setHeading(editTitle);
-                notess.setContent(editBody);
+        disposables.add(
                 DataBaseClient.getInstance(getApplicationContext())
                         .getNoteDataBase()
                         .dataObjectAccess()
-                        .updateNote(notess);
-                return null;
-            }
+                        .updateNote(notess)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                Log.i("SUCCESS", " EDIT SUCCESSFUL");
+                                Toast.makeText(getApplicationContext(),"Note Updated", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Toast.makeText(getApplicationContext(),"Note Updated", Toast.LENGTH_LONG).show();
-                finish();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        }
 
-        EditMyNote editMyNote = new EditMyNote();
-        editMyNote.execute();
 
+                            }
+                        }, throwable -> {
+                            Log.i("Error", "EDIT ERROR");
+                            Toast.makeText(getApplicationContext()," Error!!!  Note Not Updated", Toast.LENGTH_LONG).show();
+                        }));
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
     }
 }

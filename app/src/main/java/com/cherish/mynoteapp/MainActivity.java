@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,6 +23,12 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.Serializable;
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
+
 public class MainActivity extends AppCompatActivity   {
 
     FloatingActionButton fab;
@@ -31,6 +38,8 @@ public class MainActivity extends AppCompatActivity   {
      int position;
      Note item;
     SwipeToDelete swipeToDelete;
+   DataBaseClient dataBaseClient;
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
 
     @Override
@@ -59,32 +68,28 @@ public class MainActivity extends AppCompatActivity   {
 
 
     private void getNote(){
-        class GetNote extends AsyncTask <Void, Void, List< Note >>{
+        disposables.add(
+            DataBaseClient
+                    .getInstance(getApplicationContext())
+                    .getNoteDataBase()
+                    .dataObjectAccess()
+                    .getAllNote()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(notes -> {
+                        Log.i("NOTES", notes.toString());
+                        myAdapter = new NoteAdapter(MainActivity.this,notes);
+                        recyclerView.setAdapter(myAdapter);
 
-            @Override
-            protected List<Note> doInBackground(Void... voids) {
-                   List<Note> notes = DataBaseClient
-                        .getInstance(getApplicationContext())
-                        .getNoteDataBase()
-                        .dataObjectAccess()
-                        .getAllNote();
-                return notes;
-            }
+                    },throwable -> {
+                        Log.i("ERROR","ERROR");
+                        Toast.makeText(getApplicationContext()," Error!!!  Cannot get Note", Toast.LENGTH_LONG).show();
+                    }));
 
-            @Override
-            protected void onPostExecute(List<Note> notes) {
-                super.onPostExecute(notes);
-                 myAdapter = new NoteAdapter(MainActivity.this,notes);
-                recyclerView.setAdapter(myAdapter);
-
-
-            }
-        }
-
-        GetNote getNote = new GetNote();
-        getNote.execute();
 
     }
+
+
 
     public  void deleteOnSwipe(){
         swipeToDelete = new SwipeToDelete(this){
@@ -106,40 +111,41 @@ public class MainActivity extends AppCompatActivity   {
     }
 
     private  void deleteNote(final Note notes){
-        class deleteMyNote extends AsyncTask<Void, Void, Void>{
 
-            @Override
-            protected Void doInBackground(Void... voids) {
+        disposables.add(
                 DataBaseClient.getInstance(getApplicationContext())
                         .getNoteDataBase()
                         .dataObjectAccess()
-                        .deleteNote(notes);
-                return null;
-            }
+                        .deleteNote(notes)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                Log.i("SUCCESS", "DELETE SUCCESSFUL");
+                                Snackbar snackbar = Snackbar.make(constraintLayout,"Note Removed",Snackbar.LENGTH_LONG);
+                                snackbar.setAction("UNDO", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        myAdapter.undoDelete(item,position);
+                                        recyclerView.scrollToPosition(position);
+                                    }
+                                });
+                                snackbar.setActionTextColor(Color.RED);
+                                snackbar.show();
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Snackbar snackbar = Snackbar.make(constraintLayout,"Note Removed",Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myAdapter.undoDelete(item,position);
-                        recyclerView.scrollToPosition(position);
-                    }
 
-                });
-                snackbar.setActionTextColor(Color.RED);
-                snackbar.show();
 
-            }
-
-        }
-
-        deleteMyNote deleteTask = new deleteMyNote();
-        deleteTask.execute();
+                            }
+                        }, throwable -> {
+                            Log.i("Error", "ERR0R");
+                            Toast.makeText(getApplicationContext()," Error!!!  Note Not Deleted", Toast.LENGTH_LONG).show();
+                        }));
     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
+    }
 }

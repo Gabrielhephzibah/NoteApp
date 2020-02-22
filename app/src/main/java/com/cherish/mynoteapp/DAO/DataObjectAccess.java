@@ -13,19 +13,26 @@ import com.cherish.mynoteapp.entity.Note;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+
 @Dao
 public interface DataObjectAccess {
     @Query("SELECT * FROM  Note ORDER BY id DESC ")
-    List<Note>getAllNote();
+    Flowable<List<Note>> getAllNote();
 
     @Insert
-    void addNote(Note note);
+    Completable addNote(Note note);
+//    void addNote(Note note);
 
     @Update
-    void updateNote(Note note);
+    Completable updateNote(Note note);
+//    void updateNote(Note note);
 
     @Delete
-    void deleteNote(Note note);
+    Completable deleteNote(Note note);
+//    void deleteNote(Note note);
 
 
 

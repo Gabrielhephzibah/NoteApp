@@ -62,10 +62,10 @@
         android:paddingBottom="20dp"
         android:layout_height="wrap_content">
         <Button
-            android:id="@+id/save"
+            android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="39dp"
-            android:text="Save"
+            android:text="back"
             android:layout_alignParentLeft="true"
             android:fontFamily="@font/roboto"
             android:textColor="#fff"
@@ -74,11 +74,11 @@
             android:layout_marginTop="12dp"/>
 
         <Button
-            android:id="@+id/back"
+            android:id="@+id/save"
             android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="39dp"
-            android:text="Back"
+            android:text="Save"
            android:layout_alignParentEnd="true"
             android:fontFamily="@font/roboto"
             android:textColor="#fff"
