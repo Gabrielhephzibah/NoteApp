@@ -71,18 +71,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         }
     }
+    
+
+    public void undoDelete(Note notes,  int position){
+        note.add(position, notes);
+        notifyItemInserted(position);
+    }
 
     public  void  deleteMyNote(int position){
         note.remove(position);
         notifyItemRemoved(position);
     }
 
-
-
-    public void undoDelete(Note notes,  int position){
-        note.add(position, notes);
-        notifyItemInserted(position);
-    }
 
     public List<Note> getData() {
         return note;
