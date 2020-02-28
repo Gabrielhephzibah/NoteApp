@@ -2,6 +2,8 @@ package com.cherish.mynoteapp;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cherish.mynoteapp.DAO.DataBaseClient;
+import com.cherish.mynoteapp.ViewModel.NoteContentViewModel;
 import com.cherish.mynoteapp.entity.Note;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,7 +32,8 @@ public class NoteContent extends AppCompatActivity {
     TextView headingContent;
     TextView fullContent;
     Note note;
-    Button delete;
+    private ViewModelProvider.AndroidViewModelFactory factory;
+    private NoteContentViewModel noteContentViewModel;
     AlertDialog alert;
     String editTitle;
     String editBody;
@@ -42,6 +46,7 @@ public class NoteContent extends AppCompatActivity {
         setContentView(R.layout.activity_note_content);
         headingContent = findViewById(R.id.heading);
         fullContent = findViewById(R.id.content);
+        noteContentViewModel = ViewModelProviders.of(this).get(NoteContentViewModel.class);
 
         note = (Note) getIntent().getSerializableExtra("note");
         Log.i("Note", note.getContent());
@@ -68,11 +73,25 @@ public class NoteContent extends AppCompatActivity {
                          editTitle = editHeading.getText().toString().trim();
                          editBody = editContent.getText().toString().trim();
 
-                       note.setHeading(editTitle);
-                       note.setContent(editBody);
+                         note.setHeading(editTitle);
+                         note.setContent(editBody);
 
-
-                        editNote(note);
+                       disposables.add(
+                               noteContentViewModel.updateNote(note)
+                               .subscribeOn(Schedulers.io())
+                               .observeOn(AndroidSchedulers.mainThread())
+                               .subscribe(new Action() {
+                                   @Override
+                                   public void run() throws Exception {
+                                       Log.i("SUCCESS", " EDIT SUCCESSFUL");
+                                        Toast.makeText(getApplicationContext(),"Note Updated", Toast.LENGTH_LONG).show();                               Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        startActivity(intent);
+                                   }
+                               },throwable -> {
+                                   Log.i("Error", "EDIT ERROR");
+                                   Toast.makeText(getApplicationContext()," Error!!!  Note Not Updated", Toast.LENGTH_LONG).show();
+                               })
+                       );
 
                     }
                 });
@@ -96,34 +115,6 @@ public class NoteContent extends AppCompatActivity {
     public void loadNote(){
         headingContent.setText(note.getHeading());
         fullContent.setText(note.getContent());
-    }
-
-
-    private void editNote(final Note notess){
-
-        disposables.add(
-                DataBaseClient.getInstance(getApplicationContext())
-                        .getNoteDataBase()
-                        .dataObjectAccess()
-                        .updateNote(notess)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action() {
-                            @Override
-                            public void run() throws Exception {
-                                Log.i("SUCCESS", " EDIT SUCCESSFUL");
-                                Toast.makeText(getApplicationContext(),"Note Updated", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-
-
-
-                            }
-                        }, throwable -> {
-                            Log.i("Error", "EDIT ERROR");
-                            Toast.makeText(getApplicationContext()," Error!!!  Note Not Updated", Toast.LENGTH_LONG).show();
-                        }));
-
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.cherish.mynoteapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
@@ -15,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cherish.mynoteapp.DAO.DataBaseClient;
+import com.cherish.mynoteapp.ViewModel.MainActivityViewModel;
+import com.cherish.mynoteapp.ViewModel.NewNoteViewModel;
 import com.cherish.mynoteapp.entity.Note;
 
 import java.util.List;
@@ -24,12 +27,15 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Action;
+import io.reactivex.internal.schedulers.NewThreadScheduler;
 import io.reactivex.schedulers.Schedulers;
 
 public class NewNoteActivity extends AppCompatActivity {
 
     EditText heading,content ;
     Button button;
+    NewNoteViewModel newNoteViewModel;
+    private ViewModelProvider.AndroidViewModelFactory factory;
     private final CompositeDisposable disposables = new CompositeDisposable();
     Note note = new Note();
     String editContent;
@@ -38,7 +44,7 @@ public class NewNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note);
-
+        newNoteViewModel = ViewModelProviders.of(this ).get(NewNoteViewModel.class);
 
         heading = findViewById(R.id.heading);
 
@@ -67,19 +73,9 @@ public class NewNoteActivity extends AppCompatActivity {
                 Note note = new Note();
                 note.setHeading(editHeading);
                 note.setContent(editContent);
-                onSave(note);
-
-            }
-        });
-
-    }
-
-    public  void onSave(Note note){
-        disposables.add(
-                DataBaseClient.getInstance(getApplicationContext())
-                        .getNoteDataBase()
-                .dataObjectAccess()
-                .addNote(note)
+                Log.i("NOTESSSSS", note.toString());
+                disposables.add(newNoteViewModel
+                        .addNote(note)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
@@ -89,12 +85,15 @@ public class NewNoteActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(),MainActivity.class));
                         Toast.makeText(getApplicationContext(),"Note Saved",Toast.LENGTH_LONG).show();
 
-
                     }
-                }, throwable -> {
+                },throwable -> {
                     Log.i("Error", "ERORRR");
                     Toast.makeText(getApplicationContext()," Error!!!  Note Not Saved", Toast.LENGTH_LONG).show();
+
                 }));
+
+            }
+        });
 
     }
 
