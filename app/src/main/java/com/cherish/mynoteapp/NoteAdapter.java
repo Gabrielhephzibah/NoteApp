@@ -2,25 +2,28 @@ package com.cherish.mynoteapp;
 
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.cherish.mynoteapp.Fragment.NoteContentFragment;
 import com.cherish.mynoteapp.entity.Note;
+
 import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
 
     public Context context;
     private List<Note> note;
-
-
     public NoteAdapter(Context context, List<Note>note){
         this.context = context;
         this.note = note;
+
     }
 
     @NonNull
@@ -35,6 +38,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             Note notes = note.get(position);
             holder.content.setText(notes.getContent());
             holder.heading.setText(notes.getHeading());
+
     }
 
     @Override
@@ -56,15 +60,23 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         @Override
         public void onClick(View v) {
+
             Note noteItem = note.get(getAdapterPosition());
-            Intent intent = new Intent(context, NoteContent.class);
-            intent.putExtra("note", noteItem);
-            context.startActivity(intent);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("note", noteItem);
+            NoteContentFragment noteFragment = new NoteContentFragment();
+            noteFragment.setArguments(bundle);
+            MainActivity activity = (MainActivity) v.getContext();
+            if (activity.noteContentLayout.getVisibility()==View.GONE){
+                activity.noteContentLayout.setVisibility(View.VISIBLE);
+                activity.lineLayout.setVisibility(View.GONE);
+                activity.recyclerLayout.setVisibility(View.GONE);
+            }
 
-
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.noteContentLayout,noteFragment).addToBackStack(null).commit();
         }
     }
-    
+
     public  void  deleteMyNote(int position){
         note.remove(position);
         notifyItemRemoved(position);
@@ -76,10 +88,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     }
 
 
-
     public List<Note> getData() {
         return note;
     }
-
 
 }
