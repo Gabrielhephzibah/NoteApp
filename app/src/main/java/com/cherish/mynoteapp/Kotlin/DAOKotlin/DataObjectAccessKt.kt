@@ -8,7 +8,7 @@ import io.reactivex.Flowable
 @Dao
 interface DataObjectAccessKt{
     @Query("SELECT * FROM  NoteKt ORDER BY id DESC ")
-    abstract fun getAllNoteKt(): Flowable<List<NoteKt>>
+     fun getAllNoteKt(): Flowable<List<NoteKt>>
 
     @Insert
     fun addNoteKt(noteKt: NoteKt) : Completable

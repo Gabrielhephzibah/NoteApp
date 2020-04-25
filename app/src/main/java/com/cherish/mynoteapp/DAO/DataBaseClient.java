@@ -21,7 +21,7 @@ public class DataBaseClient {
 
     public static synchronized DataBaseClient getInstance(Context context){
         if (myInstance == null){
-        myInstance = new DataBaseClient(context);
+            myInstance = new DataBaseClient(context);
         }
         return myInstance;
     }

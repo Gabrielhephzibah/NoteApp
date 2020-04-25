@@ -23,7 +23,6 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends AppCompatActivity{
 
-
     private ViewModelProvider.AndroidViewModelFactory factory;
     FloatingActionButton fab;
    private MainActivityViewModel mainActivityViewModel;

@@ -6,17 +6,7 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity
-class NoteKt : Serializable {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-
-
-    @ColumnInfo(name = "contentkt")
-    var content: String? = null
-
-
-    @ColumnInfo(name = "headingkt")
-    var heading: String? = null
+class NoteKt(@PrimaryKey(autoGenerate = true) var id: Int, @ColumnInfo(name = "contentkt") var content: String?, @ColumnInfo(name = "headingkt") var heading: String? = null) : Serializable {
 
 
     override fun toString(): String {

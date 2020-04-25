@@ -20,7 +20,7 @@ import io.reactivex.Single;
 @Dao
 public interface DataObjectAccess {
     @Query("SELECT * FROM  Note ORDER BY id DESC ")
-    Flowable<List<Note>> getAllNote();
+    Flowable<List<Note>>getAllNote();
 
     @Insert
     Completable addNote(Note note);
