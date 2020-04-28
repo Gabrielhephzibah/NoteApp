@@ -10,10 +10,10 @@ import com.cherish.mynoteapp.Kotlin.entityKotlin.NoteKt
 import com.cherish.mynoteapp.R
 import kotlinx.android.synthetic.main.note_item_layout.view.*
 
-class NoteAdapterKt(context: FragmentActivity?, noteKt: List<NoteKt>) : RecyclerView.Adapter<NoteAdapterKt.NotektViewHolder>() {
+class NoteAdapterKt(context: FragmentActivity?, noteKt: ArrayList<NoteKt>) : RecyclerView.Adapter<NoteAdapterKt.NotektViewHolder>() {
 
      var context:FragmentActivity?
-    lateinit var noteKt : List<NoteKt>
+    lateinit var noteKt : ArrayList<NoteKt>
     init {
         this.context = context
         this.noteKt = noteKt
@@ -44,16 +44,22 @@ class NoteAdapterKt(context: FragmentActivity?, noteKt: List<NoteKt>) : Recycler
          val content = view.contentnote
     }
 
-//    fun deleteNoteKt(position: Int){
-//        noteKt.removeAt(position)
-//        notifyItemRemoved(position)
-//    }
-//
-//    fun undoDelete(notes: NoteKt,position: Int){
-//        noteKt.add(position,notes)
-//        notifyItemInserted(position)
-//
-//    }
+    fun deleteNoteKt(position: Int){
+        val arrayList = ArrayList<NoteKt>(noteKt)
+        noteKt.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun undoDelete(notes: NoteKt,position: Int){
+        val arrayList = ArrayList<NoteKt>(noteKt)
+        noteKt.add(position,notes)
+        notifyItemInserted(position)
+
+    }
+
+    fun getData() :List<NoteKt>{
+       return noteKt
+    }
 
 
 

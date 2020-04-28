@@ -40,6 +40,11 @@ class NoteViewModelKt(application: Application) : AndroidViewModel(application) 
             }
 
 
+    fun deleteNote(note : NoteKt) : Completable?{
+        return  myInstance?.dataObjectAccessKt()?.deleteNoteKt(note)
+    }
+
+
     }
 
 
