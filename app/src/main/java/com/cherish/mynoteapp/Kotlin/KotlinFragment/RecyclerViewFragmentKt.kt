@@ -19,6 +19,7 @@ import com.cherish.mynoteapp.Fragment.RecyclerViewFragment
 import com.cherish.mynoteapp.Kotlin.DatabaseKt.NoteDataBaseKt
 import com.cherish.mynoteapp.Kotlin.Main2Activity
 import com.cherish.mynoteapp.Kotlin.NoteAdapterKt
+import com.cherish.mynoteapp.Kotlin.SwipeToDeleteKt
 import com.cherish.mynoteapp.Kotlin.ViewModelKotlin.NoteViewModelKt
 import com.cherish.mynoteapp.Kotlin.entityKotlin.NoteKt
 import com.cherish.mynoteapp.R
@@ -31,7 +32,7 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.recycler_view_fragment.*
 
-class RecyclerViewFragmentKt :Fragment() {
+class RecyclerViewFragmentKt:Fragment() {
 
     lateinit var noteViewModelKt: NoteViewModelKt
     protected val compositeDisposable = CompositeDisposable()
@@ -65,7 +66,7 @@ class RecyclerViewFragmentKt :Fragment() {
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe({
                     Log.i("Note", it.toString())
-                  myAdapterKt = NoteAdapterKt(requireActivity(), it as ArrayList<NoteKt>)
+                  myAdapterKt = NoteAdapterKt(requireActivity(), it as MutableList<NoteKt>)
                   recyclerVieww.adapter = myAdapterKt
                 }, {
                     Log.i("ERROR", "ERROR")
@@ -80,15 +81,13 @@ class RecyclerViewFragmentKt :Fragment() {
 
 
     fun deleteOnSwipe(){
-       val swipeToDelete = object : SwipeToDelete(activity) {
+       var swipeToDeleteKt = object : SwipeToDeleteKt(requireActivity()) {
            @SuppressLint("CheckResult")
            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//               super.onSwiped(viewHolder, direction)
-
                val position = viewHolder.adapterPosition
                val itemkt = myAdapterKt!!.getData().get(position)
 
-               myAdapterKt!!.deleteNoteKt(position)
+
 
                noteViewModelKt?.deleteNote(itemkt)?.subscribeOn(Schedulers.io())
                        ?.observeOn(AndroidSchedulers.mainThread())
@@ -109,13 +108,18 @@ class RecyclerViewFragmentKt :Fragment() {
                            Toast.makeText(activity, " Error!!!  Note Not Deleted", Toast.LENGTH_LONG).show()
                        })?.let { compositeDisposable.add(it) }
 
-//                myAdapterKt!!.deleteNoteKt(position)
+                myAdapterKt!!.deleteNoteKt(position)
            }
        }
 
-        var  itemTouchHelper :ItemTouchHelper = ItemTouchHelper(swipeToDelete)
+        var  itemTouchHelper :ItemTouchHelper = ItemTouchHelper(swipeToDeleteKt)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
 }

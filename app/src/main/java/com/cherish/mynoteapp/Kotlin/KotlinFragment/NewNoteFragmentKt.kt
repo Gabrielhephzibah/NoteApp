@@ -63,8 +63,6 @@ class NewNoteFragmentKt : Fragment() {
                 return@setOnClickListener
             }
 
-
-
             Log.i("edit heading", editHeading)
             Log.i("edit content", editContent)
 
@@ -87,5 +85,11 @@ class NewNoteFragmentKt : Fragment() {
 
 
         }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 }

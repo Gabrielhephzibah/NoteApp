@@ -10,28 +10,25 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.cherish.mynoteapp.R
 
-class SwipeToDeleteKt( internal var myContext: Context) : ItemTouchHelper.Callback() {
+abstract class SwipeToDeleteKt(myContext: Context) : ItemTouchHelper.Callback() {
     private var paint:Paint
     private lateinit var  mBackground :ColorDrawable
      lateinit  var icon :Drawable
     private var backgroundColor: Int
-    private  var intrinsicWidth :Int? = null
-    private  var intrinsicHeight: Int ? = null
+    private  var intrinsicWidth :Int
+    private  var intrinsicHeight: Int
     lateinit  var mContext :Context
 
     init {
-        this.mContext= myContext
         this.mBackground = ColorDrawable()
         this.backgroundColor = Color.parseColor("#1E70D1")
         this.paint = Paint()
         paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.CLEAR))
-        icon = ContextCompat.getDrawable(mContext, R.drawable.ic_delete_black_24dp)!!
+        icon = ContextCompat.getDrawable(myContext, R.drawable.ic_delete_black_24dp)!!
         intrinsicWidth = icon.intrinsicWidth
         intrinsicHeight = icon.intrinsicHeight
 
-
     }
-
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
        return makeMovementFlags(0,ItemTouchHelper.RIGHT)
@@ -60,6 +57,15 @@ class SwipeToDeleteKt( internal var myContext: Context) : ItemTouchHelper.Callba
         mBackground.setBounds(itemView.left + dX.toInt(),itemView.top, itemView.left,itemView.bottom)
         mBackground.draw(c)
 
+
+        val deleteIconTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2
+        val deleteIconMargin = itemHeight - intrinsicHeight
+        val deleteIconLeft = itemView.left + deleteIconMargin - intrinsicWidth
+        val deleteIconRight = itemView.left + deleteIconMargin
+        val deleteIconBottom = deleteIconTop + intrinsicHeight
+
+        icon.setBounds(deleteIconLeft, deleteIconTop,deleteIconRight, deleteIconBottom)
+        icon.draw(c)
 
 
     }

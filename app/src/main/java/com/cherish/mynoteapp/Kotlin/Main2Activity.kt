@@ -8,14 +8,15 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import com.cherish.mynoteapp.Kotlin.KotlinFragment.NewNoteFragmentKt
+import com.cherish.mynoteapp.Kotlin.KotlinFragment.NoteContentFragmentKt
 import com.cherish.mynoteapp.Kotlin.KotlinFragment.RecyclerViewFragmentKt
 import kotlinx.android.synthetic.main.activity_main2.*
 import com.cherish.mynoteapp.R
+import com.cherish.mynoteapp.R.id.noteContentLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class Main2Activity : AppCompatActivity() {
     lateinit var  factory : ViewModelProvider.AndroidViewModelFactory
-    lateinit var noteContentLayout : LinearLayout
   private  val  newNoteFragmentKt = NewNoteFragmentKt()
     private  val recyclerViewFragmentKt = RecyclerViewFragmentKt()
 
@@ -23,6 +24,7 @@ class Main2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
+
 
         val fragmentma  = supportFragmentManager
         val transaction = fragmentma.beginTransaction()
